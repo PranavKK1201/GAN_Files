@@ -3,10 +3,24 @@
 # ============================================
 import numpy as np
 import matplotlib.pyplot as plt
-from tensorflow.keras.callbacks import Callback
+from tensorflow.keras.callbacks import Callback, ModelCheckpoint, EarlyStopping, ReduceLROnPlateau # Added missing imports
 import time
 import json
+import os
 from IPython.display import clear_output
+
+# --- NEW: IMPORT YOUR MODULES ---
+import GAN_Files.cnn_arch as cnn_arch
+import GAN_Files.load_balanced_data as load_balanced_data
+
+# --- NEW: INITIALIZE DATA AND MODEL ---
+# This pulls the variables into the current script's scope
+X_train, y_train, X_val, y_val, subset_class_names = load_balanced_data.create_balanced_subset()
+baseline_model = cnn_arch.get_compiled_model('resnet')
+
+# Define PROJECT_DIR if not already inherited
+PROJECT_DIR = '/content/drive/MyDrive/GAN_Malware_Detection'
+# --------------------------------
 
 print("="*60)
 print("TRAINING BASELINE CNN MODEL")

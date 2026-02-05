@@ -1,11 +1,27 @@
 # ============================================
 # CELL 7: Define GAN Architecture (Generator + Discriminator)
 # ============================================
+import os
+import sys
+
+# Ensure the module can find your other scripts if they are in a specific folder
+# sys.path.append('/content/GAN_Files') 
+
+import GAN_Files.load_balanced_data as load_balanced_data
+
+# Retrieve variables from previous steps
+# This re-runs the subset logic to ensure names and paths are consistent
+_, _, _, _, subset_class_names = load_balanced_data.create_balanced_subset()
+
+# Manually define PROJECT_DIR as it was used in previous script
+PROJECT_DIR = '/content/drive/MyDrive/GAN_Malware_Detection'
+
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers, models
 from tensorflow.keras.optimizers import Adam
 import numpy as np
+import matplotlib.pyplot as plt
 
 print("="*80)
 print("DEFINING GAN ARCHITECTURE FOR MALWARE IMAGE GENERATION")

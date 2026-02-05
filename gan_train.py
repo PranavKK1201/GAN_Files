@@ -1,6 +1,56 @@
 # ============================================
 # CELL 8: OPTIMIZED GAN Training Loop - All Fixes Applied
 # ============================================
+
+# ============================================
+# IMPORTS & GLOBAL SCOPE SETUP
+# ============================================
+import tensorflow as tf
+from tensorflow.keras import layers, models
+from tensorflow.keras.optimizers import Adam
+import numpy as np
+import os
+import cv2
+
+
+LATENT_DIM = 100
+NUM_CLASSES = 6
+IMG_HEIGHT = 64
+IMG_WIDTH = 64
+IMG_CHANNELS = 3
+IMG_SHAPE = (IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS)
+PROJECT_DIR = '/content/drive/MyDrive/GAN_Malware_Detection'
+
+
+# --- IMPORT PROJECT LOGIC ---
+import GAN_Files.load_balanced_data as load_balanced_data
+import GAN_Files.cnn_arch as cnn_arch
+
+# --- ADD THESE IMPORTS ---
+import GAN_Files.gan_arch as gan_arch # Import your architecture script
+from GAN_Files.load_balanced_data import create_balanced_subset # Import your data loader
+
+# --- INITIALIZE THE MISSING FUNCTIONS ---
+# This pulls the actual logic into the current script's scope
+generator = gan_arch.build_generator(latent_dim=100, num_classes=6)
+discriminator = gan_arch.build_discriminator(img_shape=(64, 64, 3), num_classes=6)
+
+from GAN_Files.gan_arch import build_generator, build_discriminator
+
+# Now when the script hits line 83, it will know what build_generator is
+generator = build_generator(latent_dim=LATENT_DIM, num_classes=NUM_CLASSES)
+
+# --- INITIALIZE VARIABLES ---
+# This pulls X_train and subset_class_names into this script's memory
+X_train, y_train, X_val, y_val, subset_class_names = load_balanced_data.create_balanced_subset()
+
+# Re-establish constants
+PROJECT_DIR = '/content/drive/MyDrive/GAN_Malware_Detection'
+LATENT_DIM = 100
+NUM_CLASSES = len(subset_class_names)
+IMG_SHAPE = (64, 64, 3)
+
+
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
