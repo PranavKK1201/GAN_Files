@@ -99,6 +99,13 @@ generator = build_generator(latent_dim=LATENT_DIM, num_classes=NUM_CLASSES)
 print("✓ Generator rebuilt")
 
 # Rebuild GAN with gradient clipping
+discriminator.compile(
+    optimizer=Adam(learning_rate=GAN_CONFIG['initial_lr'], beta_1=0.5, clipnorm=1.0),
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
+print("✓ Discriminator compiled with gradient clipping")
+
 discriminator.trainable = False
 noise_input = layers.Input(shape=(LATENT_DIM,), name='gan_noise_input')
 label_input = layers.Input(shape=(1,), dtype='int32', name='gan_label_input')

@@ -85,18 +85,18 @@ def build_generator(latent_dim=100, num_classes=6):
     n_nodes = 8 * 8 * 256
     x = layers.Dense(n_nodes, use_bias=False)(combined_input)
     x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU(alpha=0.2)(x)
+    x = layers.LeakyReLU(negative_slope=0.2)(x)
     x = layers.Reshape((8, 8, 256))(x)
 
     # 2. Upsample 8x8 -> 16x16
     x = layers.Conv2DTranspose(128, (4, 4), strides=(2, 2), padding='same', use_bias=False)(x)
     x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU(alpha=0.2)(x)
+    x = layers.LeakyReLU(negative_slope=0.2)(x)
 
     # 3. Upsample 16x16 -> 32x32
     x = layers.Conv2DTranspose(64, (4, 4), strides=(2, 2), padding='same', use_bias=False)(x)
     x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU(alpha=0.2)(x)
+    x = layers.LeakyReLU(negative_slope=0.2)(x)
 
     # 4. Upsample 32x32 -> 64x64 (Output)
     # Note: No Batch Norm on output layer! Tanh activation for [-1, 1] range
@@ -133,19 +133,18 @@ def build_discriminator(img_shape=(64, 64, 3), num_classes=6):
 
     # 1. Downsample 64 -> 32
     x = layers.Conv2D(64, (4, 4), strides=(2, 2), padding='same')(combined_input)
-    x = layers.LeakyReLU(alpha=0.2)(x)
+    x = layers.LeakyReLU(negative_slope=0.2)(x)
+
     x = layers.Dropout(0.3)(x)
 
     # 2. Downsample 32 -> 16
     x = layers.Conv2D(128, (4, 4), strides=(2, 2), padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU(alpha=0.2)(x)
+    x = layers.LeakyReLU(negative_slope=0.2)(x)
     x = layers.Dropout(0.3)(x)
 
     # 3. Downsample 16 -> 8
     x = layers.Conv2D(256, (4, 4), strides=(2, 2), padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.LeakyReLU(alpha=0.2)(x)
+    x = layers.LeakyReLU(negative_slope=0.2)(x)
     x = layers.Dropout(0.3)(x)
 
     # Output Layer
